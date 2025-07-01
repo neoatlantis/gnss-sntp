@@ -1,0 +1,5 @@
+debug
+*.sublime-workspace
+.generated_files/
+nbproject/private
+.stfolder
