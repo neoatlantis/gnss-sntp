@@ -25,7 +25,7 @@ void w5500_init(NIC* nic){
     // Check version
     w5500_spi_exchange_buffer(
         nic, tempbuf, W5500_CTRL_BYTE_RD_GENERAL, ADDR_GENERAL_VERSIONR);
-    printf("Chip version: %d\n\r", tempbuf[0]);
+    printf("W5500 Chip version: %d\n\r", tempbuf[0]);
     
     // Set MAC address
     memcpy(nicGR->details.SHAR.value, nic->mac.octet, 6);

@@ -3,3 +3,5 @@ debug
 .generated_files/
 nbproject/private
 .stfolder
+build
+dist
