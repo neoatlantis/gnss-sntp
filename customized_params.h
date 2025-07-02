@@ -4,12 +4,13 @@
 
 #include "nic/nic.h"
 
-#define SNTP_LOCAL_IP      192, 168, 117, 1
+#define UDP_LOCAL_IP      192, 168, 117, 1
+#define UDP_BCAST_IP      192, 168, 117, 255
+
 #define SNTP_LOCAL_PORT    123
-#define SNTP_BCAST_IP      192, 168, 117, 255
 #define SNTP_BCAST_PORT    123
 
-const NICIPv4Address IPdest = { 192, 168, 117, 255 };
-const NICIPv4Address IPsrc  = { 192, 168, 117, 1 };
+#define SYSLOG_LOCAL_PORT  514
+#define SYSLOG_BCAST_PORT  514
 
 #endif

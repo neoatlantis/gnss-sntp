@@ -18,6 +18,7 @@
 #include "w5500/udp_socket.h"
 #include "system_config.h"
 #include "customized_params.h"
+#include "syslog.h"
 
 NIC nic;
 
@@ -54,7 +55,7 @@ void main(void) {
     
     nic.id = 0;
     memcpy(&nic.mac.octet,       &(uint8_t[6]){ 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 }, 6);
-    memcpy(&nic.ip_device.octet, &(uint8_t[4]){ SNTP_LOCAL_IP }, 4);
+    memcpy(&nic.ip_device.octet, &(uint8_t[4]){ UDP_LOCAL_IP }, 4);
     memcpy(&nic.ip_gateway.octet,&(uint8_t[4]){ 0, 0, 0, 0 }, 4);
     memcpy(&nic.ip_netmask.octet,&(uint8_t[4]){ 255, 255, 255, 0 }, 4);
     nic.driver.spi_select = w5500_nic_select;
@@ -65,20 +66,25 @@ void main(void) {
     
     printf("Initialize W5500...\n\r");
     nic.init(&nic);
+
+    printf("Setting up Syslog for UDP based report...\n\r");
+    syslog_setup(&nic);
     
     printf("Opening UDP port...\n\r");
     w5500_open_udp_socket(&nic, 0, SNTP_LOCAL_PORT);
     
     printf("Init done.\n\r");
+
+    syslog_report("<6>NeoAtlantis GPS Time Broadcaster initialized.");
     
 
 
     NICUDPPacket dgram_template = { .bufferSize = 10 };
-    memcpy(&dgram_template.src_addr.octet, &(uint8_t[4]){ SNTP_LOCAL_IP }, 4);
+    memcpy(&dgram_template.src_addr.octet, &(uint8_t[4]){ UDP_LOCAL_IP }, 4);
     dgram_template.src_port.octetH = SNTP_LOCAL_PORT >> 8;
     dgram_template.src_port.octetL = SNTP_LOCAL_PORT & 0xFF;
     
-    memcpy(&dgram_template.dst_addr.octet, &(uint8_t[4]){ SNTP_BCAST_IP }, 4);
+    memcpy(&dgram_template.dst_addr.octet, &(uint8_t[4]){ UDP_BCAST_IP }, 4);
     dgram_template.dst_port.octetH = SNTP_BCAST_PORT >> 8;
     dgram_template.dst_port.octetL = SNTP_BCAST_PORT & 0xFF;
 
