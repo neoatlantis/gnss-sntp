@@ -179,14 +179,14 @@ bool w5500_udp_socket_prepare_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udp
     );
     uint16_t txbuf_offset = (TX_WR.H << 8) | (TX_WR.L);
 
-    printf("txptr(%d)", txbuf_offset);
+    //printf("txptr(%d)", txbuf_offset); // like 0->10->20 etc.
 
     // Fill send buffer
     
     w5500_spi_exchange_buffer(
         nic, udpp->buffer,
         W5500_CTRL_BYTE_WR_SOCKET_TX(socket_n),
-        ((uint32_t)txbuf_offset << 8) + (W5500_TXBUF_BLOCK(socket_n) << 3),
+        txbuf_offset,
         udpp->bufferSize
     );
     

@@ -4,17 +4,18 @@
 #include <stdint.h>
 
 
-#define W5500_CTRL_BYTE_RD_GENERAL      0b00000000
-#define W5500_CTRL_BYTE_RD_SOCKET_REG(n)  (((n << 2) | 0b01) << 3) | 0b000
-#define W5500_CTRL_BYTE_RD_SOCKET_TX(n)   (((n << 2) | 0b10) << 3) | 0b000
-#define W5500_CTRL_BYTE_RD_SOCKET_RX(n)   (((n << 2) | 0b11) << 3) | 0b000
-#define W5500_CTRL_BYTE_WR_GENERAL      0b00000100
-#define W5500_CTRL_BYTE_WR_SOCKET_REG(n)  (((n << 2) | 0b01) << 3) | 0b100
-#define W5500_CTRL_BYTE_WR_SOCKET_TX(n)   (((n << 2) | 0b10) << 3) | 0b100
-#define W5500_CTRL_BYTE_WR_SOCKET_RX(n)   (((n << 2) | 0b11) << 3) | 0b100
+#define W5500_BSB_5BITS_SOCKET_REG(n)   (1+4*n)
+#define W5500_BSB_5BITS_SOCKET_TX(n)    (2+4*n)
+#define W5500_BSB_5BITS_SOCKET_RX(n)    (3+4*n)
 
-#define W5500_TXBUF_BLOCK(N)              (2+4*N)
-#define W5500_RXBUF_BLOCK(N)              (3+4*N)
+#define W5500_CTRL_BYTE_RD_GENERAL      0b00000000
+#define W5500_CTRL_BYTE_RD_SOCKET_REG(n)  ((W5500_BSB_5BITS_SOCKET_REG(n) << 3) | 0b000)
+#define W5500_CTRL_BYTE_RD_SOCKET_TX(n)   ((W5500_BSB_5BITS_SOCKET_TX(n) << 3)  | 0b000)
+#define W5500_CTRL_BYTE_RD_SOCKET_RX(n)   ((W5500_BSB_5BITS_SOCKET_RX(n) << 3)  | 0b000)
+#define W5500_CTRL_BYTE_WR_GENERAL      0b00000100
+#define W5500_CTRL_BYTE_WR_SOCKET_REG(n)  ((W5500_BSB_5BITS_SOCKET_REG(n) << 3) | 0b100)
+#define W5500_CTRL_BYTE_WR_SOCKET_TX(n)   ((W5500_BSB_5BITS_SOCKET_TX(n) << 3)  | 0b100)
+#define W5500_CTRL_BYTE_WR_SOCKET_RX(n)   ((W5500_BSB_5BITS_SOCKET_RX(n) << 3)  | 0b100)
 
 typedef union {
     uint8_t value[2];
