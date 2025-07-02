@@ -73,21 +73,23 @@ void main(void) {
     
 
 
-    NICUDPPacket dgram = { .bufferSize = 10 };
-    memcpy(&dgram.src_addr.octet, &(uint8_t[4]){ SNTP_LOCAL_IP }, 4);
-    dgram.src_port.octetH = SNTP_LOCAL_PORT >> 8;
-    dgram.src_port.octetL = SNTP_LOCAL_PORT & 0xFF;
+    NICUDPPacket dgram_template = { .bufferSize = 10 };
+    memcpy(&dgram_template.src_addr.octet, &(uint8_t[4]){ SNTP_LOCAL_IP }, 4);
+    dgram_template.src_port.octetH = SNTP_LOCAL_PORT >> 8;
+    dgram_template.src_port.octetL = SNTP_LOCAL_PORT & 0xFF;
     
-    memcpy(&dgram.dst_addr.octet, &(uint8_t[4]){ SNTP_BCAST_IP }, 4);
-    dgram.dst_port.octetH = SNTP_BCAST_PORT >> 8;
-    dgram.dst_port.octetL = SNTP_BCAST_PORT & 0xFF;
+    memcpy(&dgram_template.dst_addr.octet, &(uint8_t[4]){ SNTP_BCAST_IP }, 4);
+    dgram_template.dst_port.octetH = SNTP_BCAST_PORT >> 8;
+    dgram_template.dst_port.octetL = SNTP_BCAST_PORT & 0xFF;
 
-    const char *testdata = "hello test";
-    for(uint8_t i=0; i<dgram.bufferSize; i++){
-        dgram.buffer[i] = i + 17;
+    for(uint8_t i=0; i<dgram_template.bufferSize; i++){
+        dgram_template.buffer[i] = i + 17;
     }
     
     while(1){
+        NICUDPPacket dgram;
+        memcpy(&dgram, &dgram_template, sizeof(NICUDPPacket));
+
         w5500_udp_socket_prepare_send(&nic, 0, &dgram);
 
         delay_ms(600);
