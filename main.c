@@ -21,6 +21,18 @@
 
 NIC nic;
 
+void delay_us(unsigned int us){
+    us *= SYSCLK / 1000000 / 2;
+    _CP0_SET_COUNT(0);
+    while (us > _CP0_GET_COUNT()){
+        WDTCONbits.WDTCLR = 1;
+    };
+}
+
+void delay_ms(int ms){
+    delay_us(ms * 1000);
+}
+
 void w5500_nic_select(){
     spi2_set_mode_8();
     SPI_SLOT1_CS_BIT = 1;
@@ -59,31 +71,32 @@ void main(void) {
     
     printf("Init done.\n\r");
     
-    NICUDPPacket udp_outgoing = { .bufferSize = 0 };
+
+
+    NICUDPPacket dgram = { .bufferSize = 10 };
+    memcpy(&dgram.src_addr.octet, &(uint8_t[4]){ SNTP_LOCAL_IP }, 4);
+    dgram.src_port.octetH = SNTP_LOCAL_PORT >> 8;
+    dgram.src_port.octetL = SNTP_LOCAL_PORT & 0xFF;
     
+    memcpy(&dgram.dst_addr.octet, &(uint8_t[4]){ SNTP_BCAST_IP }, 4);
+    dgram.dst_port.octetH = SNTP_BCAST_PORT >> 8;
+    dgram.dst_port.octetL = SNTP_BCAST_PORT & 0xFF;
+
+    const char *testdata = "hello test";
+    for(uint8_t i=0; i<dgram.bufferSize; i++){
+        dgram.buffer[i] = i + 17;
+    }
     
     while(1){
-        WDTCONbits.WDTCLR = 1;
-        
-        /*
-        NICUDPPacket udpp = w5500_udp_socket_read(&nic[0], 0);
-        if(udpp.bufferSize > 0){
-            printf(
-                "Read %d bytes from %d.%d.%d.%d:%d\n\r", udpp.bufferSize,
-                    udpp.src_addr.octet0,
-                    udpp.src_addr.octet1,
-                    udpp.src_addr.octet2,
-                    udpp.src_addr.octet3,
-                    (udpp.src_port.octetH << 8 | udpp.src_port.octetL)
-            );
-            
-            // modify udpp for reply, test purpose.
-            memcpy(udpp.dst_addr.octet, udpp.src_addr.octet, 4);
-            memcpy(udpp.dst_port.octet, udpp.src_port.octet, 2);
-            w5500_udp_socket_send(nic, 0, &udpp);
-            
-            udpp.bufferSize = 0;
-        }*/
+        w5500_udp_socket_prepare_send(&nic, 0, &dgram);
+
+        delay_ms(600);
+        printf("++");
+
+        w5500_udp_socket_do_send(&nic, 0, &dgram);
+
+        delay_ms(400);
+        printf(">!  ");
     }
     
     return;

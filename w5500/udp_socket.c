@@ -143,7 +143,7 @@ bool w5500_udp_socket_recv(NIC* nic, uint8_t socket_n, NICUDPPacket *ret){
     return true;
 }
 
-bool w5500_udp_socket_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
+bool w5500_udp_socket_prepare_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
     REG_SOCKET_TX_FSR FSR;
     w5500_spi_exchange_buffer(
         nic, FSR.value,
@@ -154,8 +154,8 @@ bool w5500_udp_socket_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
     
     if(txbuf_free < udpp->bufferSize) return false;
     
-    REG_SOCKET_DIPR DIPR;
-    REG_SOCKET_DPORT DPORT;
+    REG_SOCKET_DIPR   DIPR;
+    REG_SOCKET_DPORT  DPORT;
     
     memcpy(DIPR.octet, udpp->dst_addr.octet, 4);
     memcpy(DPORT.octet, udpp->dst_port.octet, 2);
@@ -179,12 +179,15 @@ bool w5500_udp_socket_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
     );
     uint16_t txbuf_offset = (TX_WR.H << 8) | (TX_WR.L);
 
+    printf("txptr(%d)", txbuf_offset);
+
     // Fill send buffer
     
     w5500_spi_exchange_buffer(
         nic, udpp->buffer,
         W5500_CTRL_BYTE_WR_SOCKET_TX(socket_n),
-        txbuf_offset, udpp->bufferSize
+        ((uint32_t)txbuf_offset << 8) + (W5500_TXBUF_BLOCK(socket_n) << 3),
+        udpp->bufferSize
     );
     
     // update TX_WR
@@ -196,8 +199,17 @@ bool w5500_udp_socket_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
         W5500_CTRL_BYTE_WR_SOCKET_REG(socket_n),
         ADDR_SOCKET_TX_WR
     );
-    
-    // command send
+
+    return true;
+}
+
+bool w5500_udp_socket_do_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
     w5500_send_socket_command(nic, socket_n, W5500_SOCK_CMD_SEND);
+    return true;
+}
+
+bool w5500_udp_socket_send(NIC* nic, uint8_t socket_n, NICUDPPacket* udpp){
+    w5500_udp_socket_prepare_send(nic, socket_n, udpp);
+    w5500_udp_socket_do_send(nic, socket_n, udpp);
     return true;
 }
