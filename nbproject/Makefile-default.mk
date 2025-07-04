@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c
+SOURCEFILES_QUOTED_IF_SPACED=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c i2c.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/w5500/new.o.d ${OBJECTDIR}/w5500/spi.o.d ${OBJECTDIR}/w5500/udp_socket.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/spi.o.d ${OBJECTDIR}/syslog.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o ${OBJECTDIR}/i2c.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/w5500/new.o.d ${OBJECTDIR}/w5500/spi.o.d ${OBJECTDIR}/w5500/udp_socket.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/spi.o.d ${OBJECTDIR}/syslog.o.d ${OBJECTDIR}/i2c.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o
+OBJECTFILES=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o ${OBJECTDIR}/i2c.o
 
 # Source Files
-SOURCEFILES=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c
+SOURCEFILES=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c i2c.c
 
 
 
@@ -143,6 +143,12 @@ ${OBJECTDIR}/syslog.o: syslog.c  .generated_files/flags/default/151c047c2a2a1b8d
 	@${RM} ${OBJECTDIR}/syslog.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/syslog.o.d" -o ${OBJECTDIR}/syslog.o syslog.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/i2c.o: i2c.c  .generated_files/flags/default/34236d659b13e1f118aa408dd98f6e47fb6c2406 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/i2c.o.d 
+	@${RM} ${OBJECTDIR}/i2c.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/i2c.o.d" -o ${OBJECTDIR}/i2c.o i2c.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 else
 ${OBJECTDIR}/w5500/new.o: w5500/new.c  .generated_files/flags/default/94bd9b539e000daae705d7db7d9d19d44d36769d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/w5500" 
@@ -185,6 +191,12 @@ ${OBJECTDIR}/syslog.o: syslog.c  .generated_files/flags/default/844447ca4a2d3be4
 	@${RM} ${OBJECTDIR}/syslog.o.d 
 	@${RM} ${OBJECTDIR}/syslog.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/syslog.o.d" -o ${OBJECTDIR}/syslog.o syslog.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/i2c.o: i2c.c  .generated_files/flags/default/609a18dc49e936a972ded24e441d5f6867568cac .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/i2c.o.d 
+	@${RM} ${OBJECTDIR}/i2c.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/i2c.o.d" -o ${OBJECTDIR}/i2c.o i2c.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 

@@ -50,6 +50,7 @@ void main(void) {
     
     spi2_enable();
     uart2_enable();
+
     printf("\033[2J----\n\r");
     printf("NeoAtlantis GPS Time Broadcaster\n\r");
     
@@ -72,14 +73,20 @@ void main(void) {
     
     printf("Opening UDP port...\n\r");
     w5500_open_udp_socket(&nic, 0, SNTP_LOCAL_PORT);
+
     
-    printf("Init done.\n\r");
+    
 
     syslog_report("<6>NeoAtlantis GPS Time Broadcaster initialized.");
+
+    /*syslog_report("<6>Opening serial input for GPS data...");
+    uart_gps_enable();*/
+
+    syslog_report("<6>Init done.");
     
 
 
-    NICUDPPacket dgram_template = { .bufferSize = 10 };
+    /*NICUDPPacket dgram_template = { .bufferSize = 10 };
     memcpy(&dgram_template.src_addr.octet, &(uint8_t[4]){ UDP_LOCAL_IP }, 4);
     dgram_template.src_port.octetH = SNTP_LOCAL_PORT >> 8;
     dgram_template.src_port.octetL = SNTP_LOCAL_PORT & 0xFF;
@@ -90,10 +97,14 @@ void main(void) {
 
     for(uint8_t i=0; i<dgram_template.bufferSize; i++){
         dgram_template.buffer[i] = i + 17;
-    }
-    
+    }*/
+
+        
     while(1){
-        NICUDPPacket dgram;
+        delay_ms(1000);
+        syslog_sprintf("<%d> still alive...", 6);
+
+        /*NICUDPPacket dgram;
         memcpy(&dgram, &dgram_template, sizeof(NICUDPPacket));
 
         w5500_udp_socket_prepare_send(&nic, 0, &dgram);
@@ -104,7 +115,8 @@ void main(void) {
         w5500_udp_socket_do_send(&nic, 0, &dgram);
 
         delay_ms(400);
-        printf(">!  ");
+        printf(">!  ");*/
+
     }
     
     return;

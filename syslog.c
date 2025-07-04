@@ -7,6 +7,8 @@
 NIC* syslog_nic_ptr;
 bool syslog_setup_done = false;
 
+char syslog_buffer[SYSLOG_MAX_SIZE]; 
+
 void syslog_setup(NIC* nic_ptr){
     syslog_nic_ptr = nic_ptr;
     w5500_open_udp_socket(nic_ptr, 7, SYSLOG_LOCAL_PORT);

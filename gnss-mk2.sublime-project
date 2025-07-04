@@ -2,7 +2,19 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
+			"folder_exclude_patterns": [
+				".git",
+				".stfolder",
+				".generated_files",
+				"build",
+				"debug",
+				"dist",
+				"nbproject",
+			],
+			"file_exclude_patterns": [
+				"*.log*",
+			]
 		}
 	]
 }

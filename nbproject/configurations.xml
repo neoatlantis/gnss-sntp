@@ -20,6 +20,7 @@
       <itemPath>customized_params.h</itemPath>
       <itemPath>spi.h</itemPath>
       <itemPath>syslog.h</itemPath>
+      <itemPath>i2c.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -28,8 +29,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f3" displayName="New Folder 3" projectFiles="true">
-      </logicalFolder>
       <logicalFolder name="f2" displayName="nic" projectFiles="true">
       </logicalFolder>
       <logicalFolder name="f1" displayName="w5500" projectFiles="true">
@@ -41,6 +40,7 @@
       <itemPath>uart.c</itemPath>
       <itemPath>spi.c</itemPath>
       <itemPath>syslog.c</itemPath>
+      <itemPath>i2c.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
