@@ -2,6 +2,9 @@
 #define _SYSLOG
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <xc.h>
+#include "nic/nic.h"
 
 #define SYSLOG_MAX_SIZE 500
 extern char syslog_buffer[SYSLOG_MAX_SIZE];

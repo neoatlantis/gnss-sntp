@@ -11,14 +11,19 @@
 #include <string.h>
 #include <xc.h>
 
+#include "nic/nic.h"
+#include "syslog.h"
+
 #include "uart.h"
 #include "spi.h"
-#include "nic/nic.h"
+#include "i2c.h"
+
 #include "w5500/new.h"
 #include "w5500/udp_socket.h"
+#include "m9n/i2c_reader.h"
 #include "system_config.h"
 #include "customized_params.h"
-#include "syslog.h"
+
 
 NIC nic;
 
@@ -74,8 +79,8 @@ void main(void) {
     printf("Opening UDP port...\n\r");
     w5500_open_udp_socket(&nic, 0, SNTP_LOCAL_PORT);
 
-    
-    
+    syslog_report("<6>Initializing i2c...");
+    i2c2_init();    
 
     syslog_report("<6>NeoAtlantis GPS Time Broadcaster initialized.");
 
@@ -102,7 +107,8 @@ void main(void) {
         
     while(1){
         delay_ms(1000);
-        syslog_sprintf("<%d> still alive...", 6);
+
+        m9n_i2c_read();
 
         /*NICUDPPacket dgram;
         memcpy(&dgram, &dgram_template, sizeof(NICUDPPacket));
