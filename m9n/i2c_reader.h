@@ -6,7 +6,12 @@
 #include <xc.h>
 
 void m9n_i2c_read_one_byte(uint8_t, uint8_t*);
-void m9n_i2c_read();
+void m9n_i2c_read_bytes(uint16_t, uint8_t*);
+uint16_t m9n_i2c_read();
+
+
+/* Max size for M9N i2c buffer. If more bytes are needed to be read, we will
+truncate i2c buffer. */
 
 #define M9N_I2C_BUFFER_SIZE 512
 

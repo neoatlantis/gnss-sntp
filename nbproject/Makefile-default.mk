@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c i2c.c m9n/i2c_reader.c
+SOURCEFILES_QUOTED_IF_SPACED=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c i2c.c m9n/i2c_reader.c m9n/ubx_parser.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o ${OBJECTDIR}/i2c.o ${OBJECTDIR}/m9n/i2c_reader.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/w5500/new.o.d ${OBJECTDIR}/w5500/spi.o.d ${OBJECTDIR}/w5500/udp_socket.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/spi.o.d ${OBJECTDIR}/syslog.o.d ${OBJECTDIR}/i2c.o.d ${OBJECTDIR}/m9n/i2c_reader.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o ${OBJECTDIR}/i2c.o ${OBJECTDIR}/m9n/i2c_reader.o ${OBJECTDIR}/m9n/ubx_parser.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/w5500/new.o.d ${OBJECTDIR}/w5500/spi.o.d ${OBJECTDIR}/w5500/udp_socket.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/spi.o.d ${OBJECTDIR}/syslog.o.d ${OBJECTDIR}/i2c.o.d ${OBJECTDIR}/m9n/i2c_reader.o.d ${OBJECTDIR}/m9n/ubx_parser.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o ${OBJECTDIR}/i2c.o ${OBJECTDIR}/m9n/i2c_reader.o
+OBJECTFILES=${OBJECTDIR}/w5500/new.o ${OBJECTDIR}/w5500/spi.o ${OBJECTDIR}/w5500/udp_socket.o ${OBJECTDIR}/main.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/spi.o ${OBJECTDIR}/syslog.o ${OBJECTDIR}/i2c.o ${OBJECTDIR}/m9n/i2c_reader.o ${OBJECTDIR}/m9n/ubx_parser.o
 
 # Source Files
-SOURCEFILES=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c i2c.c m9n/i2c_reader.c
+SOURCEFILES=w5500/new.c w5500/spi.c w5500/udp_socket.c main.c uart.c spi.c syslog.c i2c.c m9n/i2c_reader.c m9n/ubx_parser.c
 
 
 
@@ -155,6 +155,12 @@ ${OBJECTDIR}/m9n/i2c_reader.o: m9n/i2c_reader.c  .generated_files/flags/default/
 	@${RM} ${OBJECTDIR}/m9n/i2c_reader.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/m9n/i2c_reader.o.d" -o ${OBJECTDIR}/m9n/i2c_reader.o m9n/i2c_reader.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/m9n/ubx_parser.o: m9n/ubx_parser.c  .generated_files/flags/default/ac8858e5565c09d8cb9e4ab9abdf623281f5e0dd .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/m9n" 
+	@${RM} ${OBJECTDIR}/m9n/ubx_parser.o.d 
+	@${RM} ${OBJECTDIR}/m9n/ubx_parser.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/m9n/ubx_parser.o.d" -o ${OBJECTDIR}/m9n/ubx_parser.o m9n/ubx_parser.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 else
 ${OBJECTDIR}/w5500/new.o: w5500/new.c  .generated_files/flags/default/94bd9b539e000daae705d7db7d9d19d44d36769d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/w5500" 
@@ -209,6 +215,12 @@ ${OBJECTDIR}/m9n/i2c_reader.o: m9n/i2c_reader.c  .generated_files/flags/default/
 	@${RM} ${OBJECTDIR}/m9n/i2c_reader.o.d 
 	@${RM} ${OBJECTDIR}/m9n/i2c_reader.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/m9n/i2c_reader.o.d" -o ${OBJECTDIR}/m9n/i2c_reader.o m9n/i2c_reader.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/m9n/ubx_parser.o: m9n/ubx_parser.c  .generated_files/flags/default/bb7960a9cafe9f26af8b82eae6dc588a2733669d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/m9n" 
+	@${RM} ${OBJECTDIR}/m9n/ubx_parser.o.d 
+	@${RM} ${OBJECTDIR}/m9n/ubx_parser.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/m9n/ubx_parser.o.d" -o ${OBJECTDIR}/m9n/ubx_parser.o m9n/ubx_parser.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 

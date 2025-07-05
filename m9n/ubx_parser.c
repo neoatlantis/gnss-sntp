@@ -6,6 +6,18 @@
 
 #include "ubx_parser.h"
 
+/*
+ubx parser
+
+after init, bytes are feed into ubx_parser_feed() for updating the context.
+The function will return either UBX_PARSER_CONTINUE for continued update,
+or UBX_PARSER_NEW_MESSAGE when a new message is received.
+
+If a new message is received, user should proceed it and call init() again.
+Otherwise updating on the context with following bytes will result in these
+new bytes be discarded, and the state machine still paused.
+*/
+
 void ubx_parser_reset_context(ubx_parser_context_t* context){
     context->state = UBX_PARSER_START;
     context->bufferSize = 0;
@@ -55,7 +67,7 @@ ubx_parser_result_t ubx_parser_feed(
     case UBX_PARSER_WAITING_LEN1:
         context->state = UBX_PARSER_BUFFERING;
         context->bufferPointer = 0;
-        context->bufferSize = (context->bufferSize << 8) + byte;
+        context->bufferSize += byte << 8;
         __ubx_parser_update_checksum(context, byte);
         if(context->bufferSize > UBX_PARSER_BUFFER_SIZE){
             ubx_parser_reset_context(context);

@@ -21,11 +21,13 @@
 #include "w5500/new.h"
 #include "w5500/udp_socket.h"
 #include "m9n/i2c_reader.h"
+#include "m9n/ubx_parser.h"
 #include "system_config.h"
 #include "customized_params.h"
 
 
 NIC nic;
+ubx_parser_context_t ubx_msg_context;
 
 void delay_us(unsigned int us){
     us *= SYSCLK / 1000000 / 2;
@@ -82,6 +84,9 @@ void main(void) {
     syslog_report("<6>Initializing i2c...");
     i2c2_init();    
 
+    syslog_report("<6>Setup ubx parser.");
+    ubx_parser_init(&ubx_msg_context);
+
     syslog_report("<6>NeoAtlantis GPS Time Broadcaster initialized.");
 
     /*syslog_report("<6>Opening serial input for GPS data...");
@@ -106,9 +111,26 @@ void main(void) {
 
         
     while(1){
-        delay_ms(1000);
+        delay_ms(10);
 
-        m9n_i2c_read();
+        uint16_t m9n_i2c_bytes_read = m9n_i2c_read();
+        if(m9n_i2c_bytes_read >= 0){
+            for(uint16_t i=0; i<m9n_i2c_bytes_read; i++){
+                ubx_parser_result_t result = ubx_parser_feed(
+                    &ubx_msg_context,
+                    *(m9n_i2c_buffer + i)
+                );
+                if(result == UBX_PARSER_NEW_MESSAGE){
+                    syslog_sprintf(
+                        "<6>M9N new message(%x,%x)",
+                        ubx_msg_context.CLS,
+                        ubx_msg_context.MSGID
+                    );
+
+                    ubx_parser_reset_context(&ubx_msg_context);
+                }
+            }
+        }
 
         /*NICUDPPacket dgram;
         memcpy(&dgram, &dgram_template, sizeof(NICUDPPacket));
