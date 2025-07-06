@@ -19,12 +19,18 @@ bool syslog_report(uint8_t string[]){
     if(!syslog_setup_done) return false;
 
     uint16_t string_length = strlen(string);
-    if(string_length > SYSLOG_MAX_SIZE){
-        string_length = SYSLOG_MAX_SIZE;
+    return syslog_dump(string, string_length);
+}
+
+bool syslog_dump(uint8_t* buffer, uint16_t size){
+    if(!syslog_setup_done) return false;
+
+    if(size > SYSLOG_MAX_SIZE){
+        size = SYSLOG_MAX_SIZE;
     }
 
-    NICUDPPacket dgram = { .bufferSize = string_length };
-    memcpy(&dgram.buffer, string, string_length);
+    NICUDPPacket dgram = { .bufferSize = size };
+    memcpy(&dgram.buffer, buffer, size);
 
     memcpy(&dgram.src_addr.octet, &(uint8_t[4]){ UDP_LOCAL_IP }, 4);
     dgram.src_port.octetH = SYSLOG_LOCAL_PORT >> 8;

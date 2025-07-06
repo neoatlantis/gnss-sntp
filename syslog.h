@@ -16,6 +16,7 @@ extern char syslog_buffer[SYSLOG_MAX_SIZE];
 
 void syslog_setup(NIC* nic_ptr);
 bool syslog_report(uint8_t string[]);
+bool syslog_dump(uint8_t* buffer, uint16_t size);
 
 #define SYSLOG_PRI(facility, level) ((facility) * 8 + (level))
 

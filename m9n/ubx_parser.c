@@ -67,7 +67,7 @@ ubx_parser_result_t ubx_parser_feed(
     case UBX_PARSER_WAITING_LEN1:
         context->state = UBX_PARSER_BUFFERING;
         context->bufferPointer = 0;
-        context->bufferSize += byte << 8;
+        context->bufferSize += (byte << 8);
         __ubx_parser_update_checksum(context, byte);
         if(context->bufferSize > UBX_PARSER_BUFFER_SIZE){
             ubx_parser_reset_context(context);
@@ -76,12 +76,12 @@ ubx_parser_result_t ubx_parser_feed(
 
     case UBX_PARSER_BUFFERING:
         __ubx_parser_update_checksum(context, byte);
+        context->buffer[context->bufferPointer] = byte;
         context->bufferPointer++;
         if(context->bufferPointer >= context->bufferSize){
             // after storing this byte, full length is received
             context->state = UBX_PARSER_WAITING_CK_A;
         }
-        context->buffer[context->bufferPointer] = byte;
         break;
 
     case UBX_PARSER_WAITING_CK_A:

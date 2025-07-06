@@ -1,6 +1,8 @@
 #ifndef _W5500_REGISTERS
 #define _W5500_REGISTERS
 
+#pragma pack(push, 1)
+
 #include <stdint.h>
 
 
@@ -213,6 +215,6 @@ typedef union {
 
 
 
-
+#pragma pack(pop)
 
 #endif

@@ -22,6 +22,8 @@
 #include "w5500/udp_socket.h"
 #include "m9n/i2c_reader.h"
 #include "m9n/ubx_parser.h"
+#include "m9n/ubx_msg_def.h"
+
 #include "system_config.h"
 #include "customized_params.h"
 
@@ -50,6 +52,29 @@ void w5500_nic_select(){
 void w5500_nic_deselect(){
     SPI_SLOT1_CS_BIT = SPI_SLOT2_CS_BIT = 1;
 }
+
+
+
+void on_ubx_time_tp(){
+    UBX_MSG_TIME_TP_t ubx_time_tp;
+    memcpy(
+        ubx_time_tp.buffer,
+        ubx_msg_context.buffer, sizeof(UBX_MSG_TIME_TP_t)
+    );
+    syslog_dump(ubx_msg_context.buffer, 16);
+    syslog_sprintf(
+        "ubx-time-tp %d.%d week %d timeref %d flags %x",
+        ubx_time_tp.fields.towMS,
+        ubx_time_tp.fields.towSubMS,
+        ubx_time_tp.fields.week,
+        ubx_time_tp.fields.refInfo.timeRefGnss,
+        ubx_time_tp.fields.flags.value
+    );
+}
+
+
+
+
 
 void main(void) {
     INTCONSET = _INTCON_MVEC_MASK;
@@ -93,24 +118,10 @@ void main(void) {
     uart_gps_enable();*/
 
     syslog_report("<6>Init done.");
-    
-
-
-    /*NICUDPPacket dgram_template = { .bufferSize = 10 };
-    memcpy(&dgram_template.src_addr.octet, &(uint8_t[4]){ UDP_LOCAL_IP }, 4);
-    dgram_template.src_port.octetH = SNTP_LOCAL_PORT >> 8;
-    dgram_template.src_port.octetL = SNTP_LOCAL_PORT & 0xFF;
-    
-    memcpy(&dgram_template.dst_addr.octet, &(uint8_t[4]){ UDP_BCAST_IP }, 4);
-    dgram_template.dst_port.octetH = SNTP_BCAST_PORT >> 8;
-    dgram_template.dst_port.octetL = SNTP_BCAST_PORT & 0xFF;
-
-    for(uint8_t i=0; i<dgram_template.bufferSize; i++){
-        dgram_template.buffer[i] = i + 17;
-    }*/
 
         
     while(1){
+        i2c2_init();
         delay_ms(10);
 
         uint16_t m9n_i2c_bytes_read = m9n_i2c_read();
@@ -121,29 +132,22 @@ void main(void) {
                     *(m9n_i2c_buffer + i)
                 );
                 if(result == UBX_PARSER_NEW_MESSAGE){
-                    syslog_sprintf(
+                    /*syslog_sprintf(
                         "<6>M9N new message(%x,%x)",
                         ubx_msg_context.CLS,
                         ubx_msg_context.MSGID
-                    );
+                    );*/
 
+                    if(
+                        0x0d == ubx_msg_context.CLS &&
+                        0x01 == ubx_msg_context.MSGID
+                    ){
+                        on_ubx_time_tp();
+                    }
                     ubx_parser_reset_context(&ubx_msg_context);
                 }
             }
         }
-
-        /*NICUDPPacket dgram;
-        memcpy(&dgram, &dgram_template, sizeof(NICUDPPacket));
-
-        w5500_udp_socket_prepare_send(&nic, 0, &dgram);
-
-        delay_ms(600);
-        printf("++");
-
-        w5500_udp_socket_do_send(&nic, 0, &dgram);
-
-        delay_ms(400);
-        printf(">!  ");*/
 
     }
     
