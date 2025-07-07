@@ -61,12 +61,20 @@ void on_ubx_time_tp(){
         ubx_time_tp.buffer,
         ubx_msg_context.buffer, sizeof(UBX_MSG_TIME_TP_t)
     );
-    syslog_dump(ubx_msg_context.buffer, 16);
+    //syslog_dump(ubx_msg_context.buffer, 16);
+
+    uint64_t gps_time = 
+        ubx_time_tp.fields.towMS / 1000 +
+        7 * 24 * 60 * 60 * ubx_time_tp.fields.week;
+
+    uint64_t unix_timestamp =
+        gps_time +
+        315964800; // only for GPS, TODO add verification it's GPS!
+
     syslog_sprintf(
-        "ubx-time-tp %d.%d week %d timeref %d flags %x",
-        ubx_time_tp.fields.towMS,
-        ubx_time_tp.fields.towSubMS,
-        ubx_time_tp.fields.week,
+        "ubx-time-tp gps=%llu unix=%llu timeref %d flags %x",
+        gps_time,
+        unix_timestamp,
         ubx_time_tp.fields.refInfo.timeRefGnss,
         ubx_time_tp.fields.flags.value
     );
