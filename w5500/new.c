@@ -26,6 +26,16 @@ void w5500_init(NIC* nic){
     w5500_spi_exchange_buffer(
         nic, tempbuf, W5500_CTRL_BYTE_RD_GENERAL, ADDR_GENERAL_VERSIONR);
     printf("W5500 Chip version: %d\n\r", tempbuf[0]);
+
+    // Disable common register interrupts (IP conflict, unreachable,
+    // PPPoE, Magic Packet)
+    nicGR->details.IMR.value = 0;
+    w5500_spi_exchange_buffer(
+        nic, &nicGR->details.IMR.value,
+        W5500_CTRL_BYTE_WR_GENERAL,
+        ADDR_GENERAL_IMR
+    );
+
     
     // Set MAC address
     memcpy(nicGR->details.SHAR.value, nic->mac.octet, 6);

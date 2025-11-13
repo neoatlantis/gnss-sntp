@@ -69,14 +69,61 @@ typedef union {
 } REG_GENERAL_SIPR;
 #define ADDR_GENERAL_SIPR  0x000F, 4
 
+typedef union {
+    uint8_t value[2];
+} REG_GENERAL_INTLEVEL;
+#define ADDR_GENERAL_INTLEVEL 0x0013, 2
+
+typedef union {
+    uint8_t value;
+    struct {
+        unsigned :4;
+        unsigned MP:1;
+        unsigned PPPoE:1;
+        unsigned UNREACH:1;
+        unsigned CONFLICT:1;
+    };
+} REG_GENERAL_IR;
+#define ADDR_GENERAL_IR 0x0015, 1
+
+typedef union {
+    uint8_t value;
+    struct {
+        unsigned :4;
+        unsigned IM_IR4:1;
+        unsigned IM_IR5:1;
+        unsigned IM_IR6:1;
+        unsigned IM_IR7:1;
+    };
+} REG_GENERAL_IMR;
+#define ADDR_GENERAL_IMR 0x0016, 1
+
+typedef union {
+    uint8_t value;
+    struct {
+        unsigned S0_INT:1;
+        unsigned S1_INT:1;
+        unsigned S2_INT:1;
+        unsigned S3_INT:1;
+        unsigned S4_INT:1;
+        unsigned S5_INT:1;
+        unsigned S6_INT:1;
+        unsigned S7_INT:1;
+    };
+} REG_GENERAL_SIR;
+#define ADDR_GENERAL_SIR 0x0017, 1;
 
 typedef union {
     struct W5500_GENERAL_REGISTERS_DETAILS {
-        REG_GENERAL_MR MR;
-        REG_GENERAL_GAR GAR;
-        REG_GENERAL_SUBR SUBR;
-        REG_GENERAL_SHAR SHAR;
-        REG_GENERAL_SIPR SIPR;
+        REG_GENERAL_MR          MR;
+        REG_GENERAL_GAR         GAR;
+        REG_GENERAL_SUBR        SUBR;
+        REG_GENERAL_SHAR        SHAR;
+        REG_GENERAL_SIPR        SIPR;
+        REG_GENERAL_INTLEVEL    INTLEVEL;
+        REG_GENERAL_IR          IR;
+        REG_GENERAL_IMR         IMR;
+        REG_GENERAL_SIPR        SIR;
         // ...
     } details;
     uint8_t buffer[sizeof(struct W5500_GENERAL_REGISTERS_DETAILS)];
