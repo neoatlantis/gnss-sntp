@@ -11,6 +11,7 @@
 #include <string.h>
 #include <xc.h>
 
+#include "interrupts/interrupts.h"
 #include "nic/nic.h"
 #include "syslog.h"
 
@@ -54,6 +55,8 @@ void w5500_nic_deselect(){
 }
 
 
+uint8_t count_ubx_time = 0;
+uint64_t next_unix_timestamp = 0;
 
 void on_ubx_time_tp(){
     UBX_MSG_TIME_TP_t ubx_time_tp;
@@ -69,24 +72,37 @@ void on_ubx_time_tp(){
 
     uint64_t unix_timestamp =
         gps_time +
-        315964800; // only for GPS, TODO add verification it's GPS!
+        315964800 + 19; // only for GPS, TODO add verification it's GPS!
 
-    syslog_sprintf(
+    /*syslog_sprintf(
         "ubx-time-tp gps=%llu unix=%llu timeref %d flags %x",
         gps_time,
         unix_timestamp,
         ubx_time_tp.fields.refInfo.timeRefGnss,
         ubx_time_tp.fields.flags.value
+    );*/
+    next_unix_timestamp = unix_timestamp;
+
+    if(count_ubx_time < 3){
+        count_ubx_time++;
+        if(count_ubx_time == 3){
+            interrupt_enable_int1();
+        }
+    }
+}
+
+void interrupt_isr_int1(void){
+    syslog_sprintf(
+        "ubx-time-tp unix=%llu",
+        next_unix_timestamp
     );
 }
 
 
 
-
-
 void main(void) {
     INTCONSET = _INTCON_MVEC_MASK;
-    //__builtin_enable_interrupts();
+    __builtin_enable_interrupts();
     
     spi2_enable();
     uart2_enable();

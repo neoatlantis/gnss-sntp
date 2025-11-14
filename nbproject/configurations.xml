@@ -4,6 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f5" displayName="interrupts" projectFiles="true">
+        <itemPath>interrupts/interrupts.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f3" displayName="m9n" projectFiles="true">
         <itemPath>m9n/i2c_reader.h</itemPath>
         <itemPath>m9n/ubx_parser.h</itemPath>
@@ -38,6 +41,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f5" displayName="interrupts" projectFiles="true">
+        <itemPath>interrupts/interrupts.c</itemPath>
+      </logicalFolder>
       <logicalFolder name="f3" displayName="m9n" projectFiles="true">
         <itemPath>m9n/i2c_reader.c</itemPath>
         <itemPath>m9n/ubx_parser.c</itemPath>
