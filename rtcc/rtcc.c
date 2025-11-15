@@ -2,6 +2,21 @@
 #include "rtcc.h"
 #include "./unix_ts.h"
 
+void rtcc_init(void){
+    // Config RTCC interrupt
+    while(RTCALRM&0x1000); // Wait when ALRMSYNC is not asserted
+    RTCALRMCLR=0xCFFF;     // Clear ALRMEN, CHIME, AMASK, ARPT
+    RTCALRMbits.AMASK = 1; // Generate alarm every second
+    RTCALRMbits.CHIME = 1; // Allow repeated interrupts
+    RTCALRMbits.ARPT = 1;  // Repeated
+
+    // Enable RTCC alarm, thus start interrupts
+    RTCALRMbits.ALRMEN = 1; 
+
+    // enable RTCC
+    rtcc_enable_func();
+}
+
 void __attribute__((optimize("O0"))) rtcc_unlock(void){
     // Suspend interrupts
     interrupts_general_disable;
@@ -26,6 +41,13 @@ void rtcc_lock(void){
 void rtcc_enable_func(void){
     rtcc_unlock();
     RTCCONSET = (1 << 15);
+    rtcc_lock();
+}
+
+/* Disable the function of RTCC */
+void rtcc_disable_func(void){
+    rtcc_unlock();
+    RTCCONCLR = (1 << 15);
     rtcc_lock();
 }
 
@@ -63,8 +85,13 @@ void rtcc_write_prepare(datetime_t *datetime, RTCC_WRITE_DATA_t *data){
 }
 
 void rtcc_write(RTCC_WRITE_DATA_t *data){
+    // Write only when RTCC is disabled, avoids false alarm
     rtcc_unlock();
+    RTCCONCLR = (1 << 15); // disables RTCC
+
     RTCTIME = data->rtctime.value; // write time ASAP
     RTCDATE = data->rtcdate.value;
+
+    RTCCONSET = (1 << 15); // re-enables RTCC
     rtcc_lock();
 }

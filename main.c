@@ -33,7 +33,7 @@
 NIC nic;
 ubx_parser_context_t ubx_msg_context;
 
-void delay_us(unsigned int us){
+/*void delay_us(unsigned int us){
     us *= SYSCLK / 1000000 / 2;
     _CP0_SET_COUNT(0);
     while (us > _CP0_GET_COUNT()){
@@ -43,7 +43,7 @@ void delay_us(unsigned int us){
 
 void delay_ms(int ms){
     delay_us(ms * 1000);
-}
+}*/
 
 void w5500_nic_select(){
     spi2_set_mode_8();
@@ -93,12 +93,17 @@ void on_ubx_time_tp(){
 }
 
 void interrupt_isr_int1(void){
+    syslog_sprintf(
+        "ubx-time-tp unix=%llu",
+        next_unix_timestamp
+    );
+}
+
+void interrupt_isr_rtcc(void){
     RTCC_READ_RESULT_t rtcc_result;
     rtcc_read(&rtcc_result);
-
     syslog_sprintf(
-        "ubx-time-tp unix=%llu rtce=%d rtcd=%d-%d-%d %d:%d:%d",
-        next_unix_timestamp,
+        "RTCC pps rtce=%d rtcd=%d-%d-%d %d:%d:%d",
         rtcc_result.clock_is_running,
         rtcc_result.datetime.year,
         rtcc_result.datetime.month,
@@ -114,10 +119,12 @@ void interrupt_isr_int1(void){
 void main(void) {
     INTCONSET = _INTCON_MVEC_MASK;
     interrupts_general_enable;
+
+    rtcc_init();
+    interrupt_enable_rtcc();
     
     spi2_enable();
     uart2_enable();
-    rtcc_enable_func();
 
     printf("\033[2J----\n\r");
     printf("NeoAtlantis GPS Time Broadcaster\n\r");

@@ -15,4 +15,8 @@ void interrupt_enable_int1(void);
 void interrupt_disable_int1(void);
 extern void interrupt_isr_int1(void);
 
+void interrupt_enable_rtcc(void);
+void interrupt_disable_rtcc(void);
+extern void interrupt_isr_rtcc(void);
+
 #endif

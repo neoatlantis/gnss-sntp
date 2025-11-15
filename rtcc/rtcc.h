@@ -57,12 +57,14 @@ typedef struct {
     RTCC_RTCTIME_t rtctime;
 } RTCC_WRITE_DATA_t;
 
+void rtcc_init(void);
 
 void rtcc_unlock(void);
 void rtcc_lock(void);
 void rtcc_enable_func(void);
+void rtcc_disable_func(void);
 void rtcc_read(RTCC_READ_RESULT_t*);
-void rtcc_write_prepare(uint64_t unix_ts, RTCC_WRITE_DATA_t *data);
+void rtcc_write_prepare(datetime_t *datetime, RTCC_WRITE_DATA_t *data);
 void rtcc_write(RTCC_WRITE_DATA_t*);
 
 #define rtcc_is_running (RTCCONbits.RTCCLKON)
