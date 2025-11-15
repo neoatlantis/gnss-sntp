@@ -14,6 +14,9 @@
       <logicalFolder name="f2" displayName="nic" projectFiles="true">
         <itemPath>nic/nic.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f6" displayName="rtcc" projectFiles="true">
+        <itemPath>rtcc/rtcc.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f4" displayName="tasks" projectFiles="true">
         <logicalFolder name="f1" displayName="timing" projectFiles="true">
           <itemPath>tasks/timing/timesync.h</itemPath>
@@ -49,6 +52,9 @@
         <itemPath>m9n/ubx_parser.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="nic" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="rtcc" projectFiles="true">
+        <itemPath>rtcc/rtcc.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="tasks" projectFiles="true">
       </logicalFolder>

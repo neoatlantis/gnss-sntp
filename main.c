@@ -24,6 +24,7 @@
 #include "m9n/i2c_reader.h"
 #include "m9n/ubx_parser.h"
 #include "m9n/ubx_msg_def.h"
+#include "rtcc/rtcc.h"
 
 #include "system_config.h"
 #include "customized_params.h"
@@ -72,7 +73,7 @@ void on_ubx_time_tp(){
 
     uint64_t unix_timestamp =
         gps_time +
-        315964800 + 19; // only for GPS, TODO add verification it's GPS!
+        315964800 - 18; // only for GPS, TODO add verification it's GPS!
 
     /*syslog_sprintf(
         "ubx-time-tp gps=%llu unix=%llu timeref %d flags %x",
@@ -92,9 +93,19 @@ void on_ubx_time_tp(){
 }
 
 void interrupt_isr_int1(void){
+    RTCC_READ_RESULT_t rtcc_result;
+    rtcc_read(&rtcc_result);
+
     syslog_sprintf(
-        "ubx-time-tp unix=%llu",
-        next_unix_timestamp
+        "ubx-time-tp unix=%llu rtce=%d rtcd=%d-%d-%d %d:%d:%d",
+        next_unix_timestamp,
+        rtcc_result.clock_is_running,
+        rtcc_result.datetime.year,
+        rtcc_result.datetime.month,
+        rtcc_result.datetime.day,
+        rtcc_result.datetime.hour,
+        rtcc_result.datetime.min,
+        rtcc_result.datetime.sec
     );
 }
 
@@ -102,10 +113,11 @@ void interrupt_isr_int1(void){
 
 void main(void) {
     INTCONSET = _INTCON_MVEC_MASK;
-    __builtin_enable_interrupts();
+    interrupts_general_enable;
     
     spi2_enable();
     uart2_enable();
+    rtcc_enable_func();
 
     printf("\033[2J----\n\r");
     printf("NeoAtlantis GPS Time Broadcaster\n\r");
