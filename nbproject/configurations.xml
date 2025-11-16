@@ -22,6 +22,9 @@
           <itemPath>tasks/timing/timesync.h</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="f7" displayName="timer1" projectFiles="true">
+        <itemPath>timer1/timer1.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="w5500" projectFiles="true">
         <itemPath>w5500/config.h</itemPath>
         <itemPath>w5500/new.h</itemPath>
@@ -57,6 +60,9 @@
         <itemPath>rtcc/rtcc.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="tasks" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="f8" displayName="timer1" projectFiles="true">
+        <itemPath>timer1/timer1.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="w5500" projectFiles="true">
         <itemPath>w5500/new.c</itemPath>

@@ -26,6 +26,8 @@
 #include "m9n/ubx_msg_def.h"
 #include "rtcc/rtcc.h"
 
+#include "rtc_mon.h"
+
 #include "system_config.h"
 #include "customized_params.h"
 
@@ -33,7 +35,7 @@
 NIC nic;
 ubx_parser_context_t ubx_msg_context;
 
-/*void delay_us(unsigned int us){
+void delay_us(unsigned int us){
     us *= SYSCLK / 1000000 / 2;
     _CP0_SET_COUNT(0);
     while (us > _CP0_GET_COUNT()){
@@ -43,7 +45,7 @@ ubx_parser_context_t ubx_msg_context;
 
 void delay_ms(int ms){
     delay_us(ms * 1000);
-}*/
+}
 
 void w5500_nic_select(){
     spi2_set_mode_8();
@@ -55,9 +57,6 @@ void w5500_nic_deselect(){
     SPI_SLOT1_CS_BIT = SPI_SLOT2_CS_BIT = 1;
 }
 
-
-uint8_t count_ubx_time = 0;
-uint64_t next_unix_timestamp = 0;
 
 void on_ubx_time_tp(){
     UBX_MSG_TIME_TP_t ubx_time_tp;
@@ -75,34 +74,17 @@ void on_ubx_time_tp(){
         gps_time +
         315964800 - 18; // only for GPS, TODO add verification it's GPS!
 
-    /*syslog_sprintf(
-        "ubx-time-tp gps=%llu unix=%llu timeref %d flags %x",
-        gps_time,
-        unix_timestamp,
-        ubx_time_tp.fields.refInfo.timeRefGnss,
-        ubx_time_tp.fields.flags.value
-    );*/
-    next_unix_timestamp = unix_timestamp;
-
-    if(count_ubx_time < 3){
-        count_ubx_time++;
-        if(count_ubx_time == 3){
-            interrupt_enable_int1();
-        }
-    }
+    rtc_mon_on_next_1pps_timestamp(unix_timestamp);
 }
-
 void interrupt_isr_int1(void){
-    syslog_sprintf(
-        "ubx-time-tp unix=%llu",
-        next_unix_timestamp
-    );
+    rtc_mon_on_1pps_interrupt(next_unix_timestamp);
 }
 
 void interrupt_isr_rtcc(void){
     RTCC_READ_RESULT_t rtcc_result;
     rtcc_read(&rtcc_result);
-    syslog_sprintf(
+    rtc_mon_on_rtcc_interrupt(&rtcc_result);
+    /*syslog_sprintf(
         "RTCC pps rtce=%d rtcd=%d-%d-%d %d:%d:%d",
         rtcc_result.clock_is_running,
         rtcc_result.datetime.year,
@@ -111,7 +93,7 @@ void interrupt_isr_rtcc(void){
         rtcc_result.datetime.hour,
         rtcc_result.datetime.min,
         rtcc_result.datetime.sec
-    );
+    );*/
 }
 
 
@@ -119,6 +101,10 @@ void interrupt_isr_rtcc(void){
 void main(void) {
     INTCONSET = _INTCON_MVEC_MASK;
     interrupts_general_enable;
+
+    interrupt_enable_int1();
+
+    timer1_init();
 
     rtcc_init();
     interrupt_enable_rtcc();
